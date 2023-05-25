@@ -13,10 +13,35 @@ const lightIntensity = 2; // light intensity
 let mouseX, mouseY; // mouse position
 let canvas, sphere, renderer, scene, camera, light;
 let objects=[];
-const loader = new THREE.TextureLoader();
+let loader = new THREE.TextureLoader();
 
+let redColor = 255;
+let greenColor = 255
+let blueColor = 255;
+
+
+let directionX = 10;
+let directionY = 20;
+let directionZ = 50;
+
+let objectColor = rgbToHex(redColor,greenColor,blueColor);
+
+function rgbToHex(r, g, b) {
+    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+}
 
 document.getElementById("btn").onclick = function (e) {
+
+    redColor = document.getElementById("ir").value;
+    greenColor = document.getElementById("ig").value;
+    blueColor = document.getElementById("ib").value;
+
+    objectColor = rgbToHex(redColor,greenColor,blueColor);
+
+    directionX = document.getElementById("dx").value;
+    directionY = document.getElementById("dy").value;
+    directionZ = document.getElementById("dz").value;
+
 
     scene.remove(light);
     scene.remove(light.target);
@@ -149,12 +174,12 @@ function makeCone() {
 function makeLight(lightType) {
     switch (lightType) {
         case "ambient": // light that shoots light in all directions
-            light = new THREE.AmbientLight(rgbToHex(document.getElementById("ir").value,document.getElementById("ig").value,document.getElementById("ib").value), lightIntensity);
+            light = new THREE.AmbientLight(objectColor, lightIntensity);
             break;
         case "directional": // often used to represent the sun, and will shine in the direction of its target
-            light = new THREE.DirectionalLight(rgbToHex(document.getElementById("ir").value,document.getElementById("ig").value,document.getElementById("ib").value), lightIntensity);
-            light.position.set(1,1,1);
-            light.target.position.set(document.getElementById("dx").value, document.getElementById("dy").value, document.getElementById("dz").value);
+            light = new THREE.DirectionalLight(objectColor, lightIntensity);
+            light.position.set(directionX, directionY, directionZ);
+            light.target.position.set(directionX, directionY, directionZ);
             scene.add(light.target);
             break;
         default:
