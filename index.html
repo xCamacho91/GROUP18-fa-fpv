@@ -3,7 +3,7 @@
     <title>Introduction to three.js</title>
 </head>
 <body>
-<canvas id="gl-canvas" width="512" height="512">
+<canvas id="gl-canvas" width="800" height="600">
     Sorry, but your browser does not support HTML5's canvas element.
 </canvas>
 <br>
@@ -13,12 +13,17 @@ Type of light:
     <option value="directional">Directional</option>
 </select>
 <br>
-Type of material:
-<select id="material_selector">
-    <option value="basic">Basic</option>
-    <option value="phong">Phong</option>
-    <option value="lambert">Lambert</option>
-</select>
+<t>direcao:</t>
+<input type="text" id="dx" placeholder="X" width="30px">
+<input type="text" id="dy" placeholder="Y" width="30px">
+<input type="text" id="dz" placeholder="Z" width="30px">
+<br>
+<t>Intencidade:</t>
+<input type="text" id="ir" placeholder="R" width="30px">
+<input type="text" id="ig" placeholder="G" width="30px">
+<input type="text" id="ib" placeholder="B" width="30px">
+<br>
+<button id="btn">submit</button>
 <script src="js/three.js"></script>
 <script src="js/app.js"></script>
 </body>
