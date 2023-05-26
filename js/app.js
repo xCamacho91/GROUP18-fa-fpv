@@ -43,15 +43,31 @@ let objectColor = rgbToHex(redColor,greenColor,blueColor);
 
 document.getElementById("btn").onclick = function (e) {
 
-    redColor = document.getElementById("ir").value;
-    greenColor = document.getElementById("ig").value;
-    blueColor = document.getElementById("ib").value;
+    if (document.getElementById("ir").value && document.getElementById("ir").value != '') {
+        redColor = document.getElementById("ir").value;
+    }
+
+    if (document.getElementById("ig").value && document.getElementById("ig").value != '') {
+        greenColor = document.getElementById("ig").value;
+    }
+
+    if (document.getElementById("ib").value && document.getElementById("ib").value != '') {
+        blueColor = document.getElementById("ib").value;
+    }
 
     objectColor = rgbToHex(redColor,greenColor,blueColor);
 
-    directionX = document.getElementById("dx").value;
-    directionY = document.getElementById("dy").value;
-    directionZ = document.getElementById("dz").value;
+    if (document.getElementById("dx").value && document.getElementById("dx").value != '') {
+        directionX = document.getElementById("dx").value;
+    }
+
+    if (document.getElementById("dy").value && document.getElementById("dy").value != '') {
+        directionY = document.getElementById("dy").value;
+    }
+
+    if (document.getElementById("dz").value && document.getElementById("dz").value != '') {
+        directionZ = document.getElementById("dz").value;
+    }
 
 
     scene.remove(light);
@@ -296,10 +312,12 @@ function rgbToHex(r, g, b) {
 }
 
 function random_rotation (){
-    for (let e=0; e<random;e++){
+    let rotationAngle = angle;
+    for (let e=0; e<objects.length;e++){
         if((Math.random() * 2)>1) {
-            objects[e].rotateY(angle);
-            objects[e].rotateY(angle);
+            rotationAngle = (Math.random())*0.01;
+            scene.add(objects[e].rotateY(rotationAngle));
+            rotationAngle = 0;
         }
     } 
 }
@@ -312,7 +330,7 @@ function render() {
     // Change light's position
     light.position.set(mouseX, mouseY, 0);
     // Apply rotation
-    //random_rotation();
+    random_rotation();
     //objects[0].translateX(angle);
     // Draw the scene
     renderer.render(scene, camera);
