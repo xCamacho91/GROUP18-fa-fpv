@@ -1,3 +1,6 @@
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js'
+
 // On loading the page, run the init function
 onload = () => {
     init()
@@ -12,9 +15,10 @@ const lightIntensity = 2; // light intensity
 const cameraPositionZ = 4; // camera's Z position
 
 let mouseX, mouseY; // mouse position
-let canvas, sphere, renderer, scene, camera, light;
+let canvas, sphere, renderer, scene, camera, light, controls , clock;
 let objects=[];
 let loader = new THREE.TextureLoader();
+
 
 let redColor = 255;
 let greenColor = 255
@@ -54,6 +58,9 @@ document.getElementById("gl-canvas").onmousemove = function (e) {
     mouseX = (e.x / canvas.width) * cameraPositionZ - cameraPositionZ / 2;
     mouseY = -(e.y / canvas.height) * cameraPositionZ + cameraPositionZ / 2;
 }
+document.getElementById("button_fps").onclick = function (e) {
+    controls.lock();
+}
 
 /**
  * Initializes the WebGL application
@@ -67,6 +74,7 @@ function init() {
     // Render is the main object of three.js used to draw scenes to a canvas
     renderer = new THREE.WebGLRenderer({canvas});
     renderer.setClearColor(0xffffff);
+
 
     // *** Create a scene
     // Scene defines properties like the background, and defines the objects to be rendered
@@ -86,7 +94,8 @@ function init() {
     const aspect = canvas.width / canvas.height;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far); // mimics the way the human eye sees
     camera.position.z = cameraPositionZ;
-
+    controls = new PointerLockControls(camera, renderer.domElement);
+    clock = new THREE.Clock();
     // *** Create a light ***
     makeLight("ambient");
 
@@ -124,7 +133,6 @@ function makeCube() {
         material = new THREE.MeshPhongMaterial({map: loader.load('texture.png')}); // represent the surface properties. Note: the basic material is not affected by lights
     }
     const cube = new THREE.Mesh(geometry, material); // mesh objects represent drawing a specific Geometry with a specific Material
-    currentObject = cube;
     cube.translateX(Math.floor((Math.random() * 21)-10));
     cube.translateY(Math.floor((Math.random() * 3)-1));
     cube.translateZ(Math.floor((Math.random() * 21)-10));
@@ -158,7 +166,6 @@ function makeCone() {
     }
 
     const cone = new THREE.Mesh(geometry, material); // mesh objects represent drawing a specific Geometry with a specific Material
-    currentObject = cone;
     cone.translateX(Math.floor((Math.random() * 21)-10));
     cone.translateY(Math.floor((Math.random() * 3)-1));
     cone.translateZ(Math.floor((Math.random() * 21)-10));
@@ -193,7 +200,6 @@ function makeLight(lightType) {
  * Renders the scene.
  */
 function render() {
-    camera.position.set(mouseX,mouseY);
     // Change light's position
     light.position.set(mouseX, mouseY, 0);
     // Apply rotation
