@@ -9,6 +9,7 @@ const colorObject = 0x3f51b5; // color
 const colorEmissive = 0xd95000; // emissive color
 const colorLight = 0xffff00; // light color
 const lightIntensity = 2; // light intensity
+const cameraPositionZ = 4; // camera's Z position
 
 let mouseX, mouseY; // mouse position
 let canvas, sphere, renderer, scene, camera, light;
@@ -50,9 +51,8 @@ document.getElementById("btn").onclick = function (e) {
 }
 
 document.getElementById("gl-canvas").onmousemove = function (e) {
-    const rect = canvas.getBoundingClientRect();
-    mouseX = (e.clientX - rect.left) * canvas.width / rect.width;
-    mouseY = -(e.clientY - rect.top) * canvas.height / rect.height;
+    mouseX = (e.x / canvas.width) * cameraPositionZ - cameraPositionZ / 2;
+    mouseY = -(e.y / canvas.height) * cameraPositionZ + cameraPositionZ / 2;
 }
 
 /**
@@ -85,7 +85,7 @@ function init() {
     // Anything before or after this range will be clipped
     const aspect = canvas.width / canvas.height;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far); // mimics the way the human eye sees
-    camera.position.z = 3;
+    camera.position.z = cameraPositionZ;
 
     // *** Create a light ***
     makeLight("ambient");
@@ -193,6 +193,7 @@ function makeLight(lightType) {
  * Renders the scene.
  */
 function render() {
+    camera.position.set(mouseX,mouseY);
     // Change light's position
     light.position.set(mouseX, mouseY, 0);
     // Apply rotation
