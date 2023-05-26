@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js'
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 // On loading the page, run the init function
 onload = () => {
@@ -11,18 +12,27 @@ const angle = 0.02; // rotation in radians
 const colorObject = 0x3f51b5; // color
 const colorEmissive = 0xd95000; // emissive color
 const colorLight = 0xffff00; // light color
-const lightIntensity = 2; // light intensity
+const lightIntensity = 1; // light intensity
 const cameraPositionZ = 4; // camera's Z position
 
 let mouseX, mouseY; // mouse position
 let canvas, sphere, renderer, scene, camera, light, controls , clock;
 let objects=[];
 let loader = new THREE.TextureLoader();
+let Frente = false;
+let Atras = false;
+let Esquerda = false;
+let Direita = false;
+let random;
 
+//objLoader
+const objloader = new OBJLoader();
 
 let redColor = 255;
 let greenColor = 255
 let blueColor = 255;
+
+let objname = ["Astronaut", "bird" , "cat" , "pig", "tiger"];
 
 
 let directionX = 10;
@@ -30,10 +40,6 @@ let directionY = 20;
 let directionZ = 50;
 
 let objectColor = rgbToHex(redColor,greenColor,blueColor);
-
-function rgbToHex(r, g, b) {
-    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
-}
 
 document.getElementById("btn").onclick = function (e) {
 
@@ -62,10 +68,16 @@ document.getElementById("button_fps").onclick = function (e) {
     controls.lock();
 }
 
+//eventos para keydown e keyup
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
+
+
+
 /**
  * Initializes the WebGL application
  */
-function init() {
+async function init() {
 
     // *** Get canvas
     canvas = document.getElementById('gl-canvas');
@@ -79,17 +91,21 @@ function init() {
     // *** Create a scene
     // Scene defines properties like the background, and defines the objects to be rendered
     scene = new THREE.Scene();
-    for (let i=0; i<(Math.random() * 26)+5;i++){
-        if((Math.random() * 2)>1) {
+    random = Math.floor(Math.random() * 26)+5;
+    for (let i=0; i<random;i++){
+        if((Math.random() * 3)>1) {
             makeCube();
-        }else{
+        }else if ((Math.random() * 3)>1){
             makeCone();
+        }else {
+            makeOBJ(objname[Math.floor(Math.random() * 5)]);
         }
     }
+
     // *** Create a camera
-    const fov = 90; // field of view
+    const fov = 75; // field of view
     const near = 0.1;
-    const far = 5;
+    const far = 20;
     // Anything before or after this range will be clipped
     const aspect = canvas.width / canvas.height;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far); // mimics the way the human eye sees
@@ -101,6 +117,35 @@ function init() {
 
     // *** Render
     render();
+
+}
+
+async function makeOBJ(nome){
+
+    const textureLoader = new THREE.TextureLoader();
+	const objLoader = new OBJLoader();
+
+	const [ texture, obj ] = await Promise.all( [
+		textureLoader.loadAsync( 'modelos/' + nome + '.png' ),
+		objLoader.loadAsync( 'modelos/' + nome + '.obj' ),
+	] );
+
+	obj.traverse( function ( child ) {
+
+		if ( child.isMesh ) {
+
+			 child.material.map = texture;
+			 child.geometry.computeVertexNormals();
+
+		 }
+
+	} );
+    obj.translateX(Math.floor((Math.random() * 21)-10));
+    obj.translateY(Math.floor((Math.random() * 3)-1));
+    obj.translateZ(Math.floor((Math.random() * 21)-10));
+    obj.scale.setScalar(0.2);
+    scene.add( obj );
+    objects.push(obj);
 
 }
 
@@ -194,18 +239,81 @@ function makeLight(lightType) {
     }
     scene.add(light);
 }
+function handleKeyDown(event) {
+    const key = event.key.toLowerCase(); //maiusculas nao dá
+    switch (key) {
+        case 'w':
+            Frente = true;
+            break;
+        case 'a':
+            Esquerda = true;
+            break;
+        case 's':
+            Atras = true;
+            break;
+        case 'd':
+            Direita = true;
+            break;
+    }
+}
+function handleKeyUp(event) {
+    const key = event.key.toLowerCase();
+    // Reset the movement flags based on the released key
+    switch (key) {
+        case 'w':
+            Frente = false;
+            break;
+        case 'a':
+            Esquerda = false;
+            break;
+        case 's':
+            Atras = false;
+            break;
+        case 'd':
+            Direita = false;
+            break;
+    }
+}
 
+function updateCameraPosition() {
+    const speed = 0.05; //mudar aqui a velocidade do movimento
+    if (Frente) {
+        camera.translateZ(-speed);
+    }
+    if (Atras) {
+        camera.translateZ(speed);
+    }
+    if (Esquerda) {
+        camera.translateX(-speed);
+    }
+    if (Direita) {
+        camera.translateX(speed);
+    }
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+}
+
+function random_rotation (){
+    for (let e=0; e<random;e++){
+        if((Math.random() * 2)>1) {
+            objects[e].rotateY(angle);
+            objects[e].rotateY(angle);
+        }
+    } 
+}
 
 /*
  * Renders the scene.
  */
 function render() {
+    updateCameraPosition();
     // Change light's position
     light.position.set(mouseX, mouseY, 0);
     // Apply rotation
+    //random_rotation();
     //objects[0].translateX(angle);
-    objects[0].rotateX(angle);
-    objects[0].rotateY(angle);
     // Draw the scene
     renderer.render(scene, camera);
     // Make the new frame
