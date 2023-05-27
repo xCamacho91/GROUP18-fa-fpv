@@ -172,12 +172,12 @@ function makeCube() {
     // Specify the colors of the faces
     let colorsArray = [];
     let vertexColors = [
-        [1.0, 1.0, 0.0], // yellow
-        [0.0, 1.0, 0.0], // green
-        [0.0, 0.0, 1.0], // blue
-        [1.0, 0.0, 1.0], // magenta
-        [0.0, 1.0, 1.0], // cyan
-        [1.0, 0.0, 0.0], // red
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
     ];
     // Set the color of the faces
     for (let face = 0; face < 6; face++) {
@@ -207,10 +207,10 @@ function makeCone() {
     // Specify the colors of the faces
     let colorsArray = [];
     let vertexColors = [
-        [0.0, 1.0, 0.0], // green
-        [0.0, 0.0, 1.0], // blue
-        [1.0, 0.0, 1.0], // magenta
-        [0.0, 1.0, 1.0], // cyan
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
+        [((Math.random() * 101)/100), ((Math.random() * 101)/100), ((Math.random() * 101)/100)],
     ];
     // Set the color of the faces
     for (let face = 0; face < 4; face++) {
