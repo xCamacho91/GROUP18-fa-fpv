@@ -135,7 +135,10 @@ async function init() {
     render();
 
 }
-
+/** 
+* this functions adds obj to the scene with a texture,translation, and scale
+* @param {string} nome - name of wich obj to add
+*/
 async function makeOBJ(nome){
 
     const textureLoader = new THREE.TextureLoader();
@@ -165,7 +168,9 @@ async function makeOBJ(nome){
 
 }
 
-
+/** 
+* makes,translates a cube
+*/
 function makeCube() {
     const cubeSide= ((Math.random() * 41)+10)*0.01;
     const geometry = new THREE.BoxGeometry(cubeSide, cubeSide, cubeSide).toNonIndexed(); // vertex data
@@ -200,7 +205,9 @@ function makeCube() {
     scene.add(cube);
     objects.push(cube);
 }
-
+/** 
+* makes,translates a triangular pyramid
+*/
 function makeCone() {
     const coneSide= ((Math.random() * 41)+10)*0.01;
     const geometry = new THREE.TetrahedronGeometry(coneSide, 0); // vertex data
@@ -255,6 +262,11 @@ function makeLight(lightType) {
     }
     scene.add(light);
 }
+
+/** 
+* wasd to walk function
+* @param {event} event - when a button is pressed down
+*/
 function handleKeyDown(event) {
     const key = event.key.toLowerCase(); //maiusculas nao dá
     switch (key) {
@@ -272,6 +284,10 @@ function handleKeyDown(event) {
             break;
     }
 }
+/** 
+* wasd to walk function release
+* @param {event} event - when a button is released
+*/
 function handleKeyUp(event) {
     const key = event.key.toLowerCase();
     // Reset the movement flags based on the released key
@@ -291,6 +307,10 @@ function handleKeyUp(event) {
     }
 }
 
+
+/** 
+* this functions updates the camera
+*/
 function updateCameraPosition() {
     const speed = 0.05; //mudar aqui a velocidade do movimento
     if (Frente) {
@@ -306,11 +326,16 @@ function updateCameraPosition() {
         camera.translateX(speed);
     }
 }
-
+/** 
+* simple rgt to hex function
+*/
 function rgbToHex(r, g, b) {
     return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
 
+/** 
+* adds a rotation
+*/
 function random_rotation (){
     let rotationAngle = angle;
     for (let e=0; e<objects.length;e++){
